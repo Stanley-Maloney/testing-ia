@@ -1,1 +1,185 @@
-<!-- Página com formulário para cadastro de itens, lista dos itens abaixo, e botões para editar e excluir. Usar HTML, CSS e JavaScript puro -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Itens</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        input[type="text"], textarea {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        button[type="submit"] {
+            background: #4caf50;
+            color: #fff;
+        }
+        #cancel-edit {
+            background: #f0ad4e;
+            color: #fff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background: #f9f9f9;
+        }
+        table button {
+            color: #fff;
+        }
+        .edit-btn {
+            background: #0275d8;
+        }
+        .delete-btn {
+            background: #d9534f;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Cadastro de Itens</h1>
+    <form id="item-form">
+        <input type="hidden" id="item-index">
+        <div class="input-group">
+            <label for="name">Nome</label>
+            <input type="text" id="name" required>
+        </div>
+        <div class="input-group">
+            <label for="description">Descrição</label>
+            <textarea id="description" required></textarea>
+        </div>
+        <div>
+            <button type="submit">Salvar</button>
+            <button type="button" id="cancel-edit" hidden>Cancelar</button>
+        </div>
+    </form>
+    <table id="items-table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<script>
+    const items = [];
+    let editingIndex = null;
+
+    const form = document.getElementById('item-form');
+    const nameInput = document.getElementById('name');
+    const descInput = document.getElementById('description');
+    const tableBody = document.querySelector('#items-table tbody');
+    const cancelEditBtn = document.getElementById('cancel-edit');
+
+    function render() {
+        tableBody.innerHTML = '';
+        items.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.name}</td>
+                <td>${item.description}</td>
+                <td>
+                    <button class="edit-btn" onclick="editItem(${index})">Editar</button>
+                    <button class="delete-btn" onclick="deleteItem(${index})">Excluir</button>
+                </td>`;
+            tableBody.appendChild(row);
+        });
+    }
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = nameInput.value.trim();
+        const desc = descInput.value.trim();
+        if (!name || !desc) return;
+
+        if (editingIndex === null) {
+            items.push({ name, description: desc });
+        } else {
+            items[editingIndex] = { name, description: desc };
+            editingIndex = null;
+            cancelEditBtn.hidden = true;
+            form.querySelector('button[type="submit"]').textContent = 'Salvar';
+        }
+        form.reset();
+        render();
+    });
+
+    function editItem(index) {
+        const item = items[index];
+        nameInput.value = item.name;
+        descInput.value = item.description;
+        editingIndex = index;
+        cancelEditBtn.hidden = false;
+        form.querySelector('button[type="submit"]').textContent = 'Atualizar';
+    }
+
+    function deleteItem(index) {
+        if (confirm('Tem certeza que deseja excluir este item?')) {
+            items.splice(index, 1);
+            render();
+        }
+    }
+
+    cancelEditBtn.addEventListener('click', () => {
+        editingIndex = null;
+        form.reset();
+        cancelEditBtn.hidden = true;
+        form.querySelector('button[type="submit"]').textContent = 'Salvar';
+    });
+
+    render();
+</script>
+</body>
+</html>
