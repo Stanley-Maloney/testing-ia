@@ -24,6 +24,22 @@ Testar sugestões automáticas de código, autocompletar inteligente e snippets 
 
 Comece uma linha com comentário explicando o que você quer fazer, como:
 
-```js
-// Função que retorna os números primos até 100
-```
+---
+
+## ⚙️ Instruções para o Copilot (Codex)
+
+Este projeto serve como base para o GitHub Copilot sugerir automaticamente a estrutura e o código de um pequeno projeto.
+
+### Requisitos esperados:
+
+- Criar funções simples com comentários explicativos.
+- Criar um CRUD básico (Create, Read, Update, Delete).
+- Criar uma tela simples com formulário e listagem.
+- Usar tecnologias modernas (à escolha do Copilot), como:
+  - HTML + CSS + JS
+  - ou React
+  - ou Node.js + Express
+  - ou Python + Flask
+- Código deve ser claro, didático e pronto para ser expandido.
+
+Exemplo de prompt:
